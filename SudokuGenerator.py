@@ -15,29 +15,6 @@ emptyBoard = [
 ]
 
 
-# def generatePuzzle(aBoard):
-#     allowedNums = []
-#     previousChangedValues = []
-#     oldAllowedNums = []
-#     for indexI, i in enumerate(emptyBoard):
-#         for indexJ, j in enumerate(i):
-#             for k in range(1, 10):
-#                 if not keepCheckingValues(k, aBoard, indexI, indexJ):
-#                     allowedNums.append(k)
-#             if allowedNums == []:
-#                 #undo
-#
-#             try:
-#                 oldAllowedNums = deepcopy(allowedNums)
-#                 num = allowedNums[random.randint(0, len(allowedNums) - 1)]
-#                 aBoard[indexI][indexJ] = num
-#                 previousChangedValues.append([indexI, indexJ, num])
-#                 oldAllowedNums.remove(num)
-#                 allowedNums = []
-#             except:
-#                 print(allowedNums)
-#     return aBoard
-
 def generateSolvedBoard(aBoard):
     allowedNums = []
     previousChangedValues = []
@@ -71,7 +48,8 @@ def generateSolvedBoard(aBoard):
 
 
 def generatePuzzle(aBoard):
-    totalNumbersToRemove = random.randint(40, 64)
+    # totalNumbersToRemove = random.randint(50, 64)
+    totalNumbersToRemove = 64
     for i in range (0, totalNumbersToRemove):
         randomRow = random.randint(0, 8)
         randomCol = random.randint(0, 8)
@@ -94,12 +72,7 @@ def generatePuzzle(aBoard):
 
 
 
-printBoard(generatePuzzle(generateSolvedBoard(emptyBoard)))
-print(" ")
-# printBoard(generateSolvedBoard(emptyBoard))
-printBoard(solveBoardLoToHi(emptyBoard))
-print(" ")
-printBoard(solveBoardHiToLo(emptyBoard))
+
 
 
 
