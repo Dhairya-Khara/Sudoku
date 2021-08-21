@@ -29,8 +29,10 @@ font2 = pygame.font.SysFont("comicsans", 20)
 windowSize = width, height = 500, 500
 screen = pygame.display.set_mode(windowSize)
 
-BLACK = (0, 0, 0)
-WHITE = (200, 200, 200)
+BLACK = (43, 50, 64)
+WHITE = (242, 153, 75)
+BOX_COLOUR = (133, 150, 166)
+
 dif = width / 9
 x = 0
 y = 0
@@ -45,14 +47,14 @@ def get_cord(pos):
 
 def draw_box():
     for i in range(2):
-        pygame.draw.line(screen, (255, 0, 0), (x * dif - 3, (y + i) * dif), (x * dif + dif + 3, (y + i) * dif), 7)
-        pygame.draw.line(screen, (255, 0, 0), ((x + i) * dif, y * dif), ((x + i) * dif, y * dif + dif), 7)
+        pygame.draw.line(screen, BOX_COLOUR, (x * dif - 3, (y + i) * dif), (x * dif + dif + 3, (y + i) * dif), 7)
+        pygame.draw.line(screen, BOX_COLOUR, ((x + i) * dif, y * dif), ((x + i) * dif, y * dif + dif), 7)
 
 
 def drawBoxWithGivenArguments(aX, aY):
     for i in range(2):
-        pygame.draw.line(screen, (255, 0, 0), (aX * dif - 3, (aY + i) * dif), (aX * dif + dif + 3, (aY + i) * dif), 7)
-        pygame.draw.line(screen, (255, 0, 0), ((aX + i) * dif, aY * dif), ((aX + i) * dif, aY * dif + dif), 7)
+        pygame.draw.line(screen, BOX_COLOUR, (aX * dif - 3, (aY + i) * dif), (aX * dif + dif + 3, (aY + i) * dif), 7)
+        pygame.draw.line(screen, BOX_COLOUR, ((aX + i) * dif, aY * dif), ((aX + i) * dif, aY * dif + dif), 7)
 
 
 def drawOutlineLines():
@@ -62,11 +64,13 @@ def drawOutlineLines():
             thick = 7
         else:
             thick = 1
-        pygame.draw.line(screen, (0, 0, 0), (0, i * dif), (500, i * dif), thick)
-        pygame.draw.line(screen, (0, 0, 0), (i * dif, 0), (i * dif, 500), thick)
+        pygame.draw.line(screen, BLACK, (0, i * dif), (500, i * dif), thick)
+        pygame.draw.line(screen, BLACK, (i * dif, 0), (i * dif, 500), thick)
 
 
-def draw(aBoard=puzzle):
+def draw(aBoard=None):
+    if aBoard is None:
+        aBoard = puzzle
     screen.fill(WHITE)
     for i in range(9):
         for j in range(9):
@@ -83,7 +87,9 @@ def drawNumber(i, j, number):
     screen.blit(text1, (j * dif + 20, i * dif + 20))
 
 
-def generateSolvedBoardGUI(aBoard=puzzle):
+def generateSolvedBoardGUI(aBoard=None):
+    if aBoard is None:
+        aBoard = puzzle
     allowedNums = []
     previousChangedValues = []
     oldAllowedNums = []
@@ -122,7 +128,9 @@ def generateSolvedBoardGUI(aBoard=puzzle):
     return aBoard
 
 
-def removeNumbersFromSolvedBoardGUI(aBoard=puzzle):
+def removeNumbersFromSolvedBoardGUI(aBoard=None):
+    if aBoard is None:
+        aBoard = puzzle
     totalNumbersToRemove = 64
     for i in range(0, totalNumbersToRemove):
         randomRow = random.randint(0, 8)
@@ -157,7 +165,9 @@ def generatePuzzle():
     removeNumbersFromSolvedBoardGUI()
 
 
-def solveBoardGUI(aBoard=puzzle):
+def solveBoardGUI(aBoard=None):
+    if aBoard is None:
+        aBoard = puzzle
     previousChangedValues = []
     i = 0
     j = 0
