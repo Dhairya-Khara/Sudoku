@@ -1,10 +1,9 @@
-import os, pygame
+import pygame
 import sys
-import time
+import pygame_menu
 import random
 from copy import deepcopy
-from SudokuGenerator import keepCheckingValues
-from SudokuSolver import solveBoardLoToHi, solveBoardHiToLo
+from SudokuSolver import solveBoardLoToHi, solveBoardHiToLo, keepCheckingValues
 
 emptyBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -110,6 +109,7 @@ def generateSolvedBoardGUI(aBoard=puzzle):
             oldAllowedNums[len(oldAllowedNums)-1].remove(num)
             allowedNums = []
 
+            pygame.event.pump()
             draw(aBoard)
             drawBoxWithGivenArguments(j, i)
             pygame.display.update()
@@ -133,6 +133,7 @@ def removeNumbersFromSolvedBoardGUI(aBoard=puzzle):
         solution1 = solveBoardLoToHi(tempBoard)
         solution2 = solveBoardHiToLo(tempBoard)
 
+        pygame.event.pump()
         draw()
         drawBoxWithGivenArguments(randomRow, randomCol)
         pygame.display.update()
@@ -151,6 +152,7 @@ def removeNumbersFromSolvedBoardGUI(aBoard=puzzle):
 
 
 def generatePuzzle():
+    pygame.event.pump()
     generateSolvedBoardGUI()
     removeNumbersFromSolvedBoardGUI()
 
@@ -161,6 +163,7 @@ def solveBoardGUI(aBoard=puzzle):
     j = 0
     while i <= len(aBoard) - 1:
         while j <= len(aBoard[i]) - 1:
+            pygame.event.pump()
             draw()
             drawBoxWithGivenArguments(j, i)
             pygame.display.update()
@@ -188,25 +191,35 @@ def solveBoardGUI(aBoard=puzzle):
         j = 0
 
 
-run = True
-drawRedBox = False
-while run:
-    screen.fill(WHITE)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-            sys.exit()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            get_cord(pos)
-            drawRedBox = True
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
-                solveBoardGUI()
-            if event.key == pygame.K_f:
-                generatePuzzle()
+def startTheGame():
+    run = True
+    drawRedBox = False
+    while run:
+        pygame.event.pump()
+        screen.fill(WHITE)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                get_cord(pos)
+                drawRedBox = True
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
+                    solveBoardGUI()
+                if event.key == pygame.K_f:
+                    generatePuzzle()
 
-    draw()
-    if drawRedBox:
-        draw_box()
-    pygame.display.update()
+        draw()
+        if drawRedBox:
+            draw_box()
+        pygame.display.update()
+
+
+menu = pygame_menu.Menu('Welcome', width, height)
+
+menu.add.button('Play', startTheGame)
+menu.add.button('Quit', pygame_menu.events.EXIT)
+
+menu.mainloop(screen)
