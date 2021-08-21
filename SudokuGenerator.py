@@ -15,7 +15,7 @@ emptyBoard = [
 ]
 
 
-def generateSolvedBoard(aBoard):
+def generateSolvedBoard(aBoard=emptyBoard):
     allowedNums = []
     previousChangedValues = []
     oldAllowedNums = []
@@ -50,7 +50,7 @@ def generateSolvedBoard(aBoard):
 def generatePuzzle(aBoard):
     # totalNumbersToRemove = random.randint(50, 64)
     totalNumbersToRemove = 64
-    for i in range (0, totalNumbersToRemove):
+    for i in range(0, totalNumbersToRemove):
         randomRow = random.randint(0, 8)
         randomCol = random.randint(0, 8)
         tempBoard = deepcopy(aBoard)
