@@ -26,7 +26,7 @@ pygame.init()
 font1 = pygame.font.SysFont("comicsans", 40)
 font2 = pygame.font.SysFont("comicsans", 20)
 
-windowSize = width, height = 500, 500
+windowSize = width, height = 500, 600
 screen = pygame.display.set_mode(windowSize)
 
 BLACK = (43, 50, 64)
@@ -36,6 +36,30 @@ BOX_COLOUR = (133, 150, 166)
 dif = width / 9
 x = 0
 y = 0
+
+
+# Display instruction for the game
+def instruction():
+    text1 = font2.render("PRESS D TO RESET TO DEFAULT / R TO EMPTY", 1, (0, 0, 0))
+    text2 = font2.render("ENTER VALUES AND PRESS ENTER TO VISUALIZE", 1, (0, 0, 0))
+    screen.blit(text1, (20, 520))
+    screen.blit(text2, (20, 540))
+
+
+def buttonToGenerateBoard():
+    pygame.event.pump()
+    text1 = font2.render("Generate Puzzle", 1, BLACK)
+    screen.blit(text1, (20, 520))
+
+
+def buttonToSolveBoard():
+    text1 = font2.render("Solve Board", 1, BLACK)
+    screen.blit(text1, (150, 520))
+
+
+def buttonToMenu():
+    text1 = font2.render("Menu", 1, BLACK)
+    screen.blit(text1, (150, 520))
 
 
 def get_cord(pos):
@@ -80,6 +104,8 @@ def draw(aBoard=None):
 
     # Draw lines horizontally and vertically to form grid
     drawOutlineLines()
+    buttonToGenerateBoard()
+    buttonToSolveBoard()
 
 
 def drawNumber(i, j, number):
@@ -207,23 +233,31 @@ def startTheGame():
     while run:
         pygame.event.pump()
         screen.fill(WHITE)
+        pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-                get_cord(pos)
-                drawRedBox = True
+                print(pygame.mouse.get_pos())
+                if 520 <= pos[1] <= 530:
+                    if 20 <= pos[0] <= 120:
+                        generatePuzzle()
+                    elif 150 <= pos[0] <= 225:
+                        solveBoardGUI()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
                     solveBoardGUI()
                 if event.key == pygame.K_f:
                     generatePuzzle()
-
+        if 520 <= pos[1] <= 530:
+            if 20 <= pos[0] <= 120:
+                pygame.mouse.set_cursor(pygame.cursors.tri_left)
+            elif 150 <= pos[0] <= 225:
+                pygame.mouse.set_cursor(pygame.cursors.tri_left)
+        else:
+            pygame.mouse.set_cursor(*pygame.cursors.arrow)
         draw()
-        if drawRedBox:
-            draw_box()
         pygame.display.update()
 
 
