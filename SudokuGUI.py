@@ -3,7 +3,7 @@ import sys
 import pygame_menu
 import random
 from copy import deepcopy
-from SudokuSolver import solveBoardLoToHi, solveBoardHiToLo, keepCheckingValues
+from SudokuSolver import solveBoardLoToHi, solveBoardHiToLo, keepCheckingValues, printBoard
 
 emptyBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -17,7 +17,6 @@ emptyBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ]
 
-
 puzzle = emptyBoard
 
 pygame.init()
@@ -29,8 +28,10 @@ font2 = pygame.font.SysFont("comicsans", 20)
 windowSize = width, height = 500, 600
 screen = pygame.display.set_mode(windowSize)
 
-BLACK = (43, 50, 64)
-WHITE = (242, 153, 75)
+DARK_BLUE = (43, 50, 64)
+ORANGE = (242, 153, 75)
+LIGHT_GREY = (200, 200, 200)
+
 BOX_COLOUR = (133, 150, 166)
 
 dif = width / 9
@@ -38,28 +39,20 @@ x = 0
 y = 0
 
 
-# Display instruction for the game
-def instruction():
-    text1 = font2.render("PRESS D TO RESET TO DEFAULT / R TO EMPTY", 1, (0, 0, 0))
-    text2 = font2.render("ENTER VALUES AND PRESS ENTER TO VISUALIZE", 1, (0, 0, 0))
-    screen.blit(text1, (20, 520))
-    screen.blit(text2, (20, 540))
-
-
-def buttonToGenerateBoard():
+def buttonToGenerateBoard(textColour):
     pygame.event.pump()
-    text1 = font2.render("Generate Puzzle", 1, BLACK)
+    text1 = font2.render("Generate Puzzle", True, textColour)
     screen.blit(text1, (20, 520))
 
 
-def buttonToSolveBoard():
-    text1 = font2.render("Solve Board", 1, BLACK)
+def buttonToSolveBoard(textColour):
+    text1 = font2.render("Solve Board", True, textColour)
     screen.blit(text1, (150, 520))
 
 
-def buttonToMenu():
-    text1 = font2.render("Menu", 1, BLACK)
-    screen.blit(text1, (150, 520))
+def buttonToMenu(textColour):
+    text1 = font2.render("Menu", True, textColour)
+    screen.blit(text1, (255, 520))
 
 
 def get_cord(pos):
@@ -88,41 +81,54 @@ def drawOutlineLines():
             thick = 7
         else:
             thick = 1
-        pygame.draw.line(screen, BLACK, (0, i * dif), (500, i * dif), thick)
-        pygame.draw.line(screen, BLACK, (i * dif, 0), (i * dif, 500), thick)
+        pygame.draw.line(screen, DARK_BLUE, (0, i * dif), (500, i * dif), thick)
+        pygame.draw.line(screen, DARK_BLUE, (i * dif, 0), (i * dif, 500), thick)
 
 
 def draw(aBoard=None):
     if aBoard is None:
         aBoard = puzzle
-    screen.fill(WHITE)
+    screen.fill(ORANGE)
     for i in range(9):
         for j in range(9):
             if aBoard[i][j] != 0:
-                text1 = font1.render(str(aBoard[i][j]), 1, BLACK)
+                text1 = font1.render(str(aBoard[i][j]), 1, DARK_BLUE)
                 screen.blit(text1, (j * dif + 20, i * dif + 20))
 
     # Draw lines horizontally and vertically to form grid
     drawOutlineLines()
-    buttonToGenerateBoard()
-    buttonToSolveBoard()
 
 
 def drawNumber(i, j, number):
-    text1 = font1.render(str(number), 1, BLACK)
+    text1 = font1.render(str(number), True, DARK_BLUE)
     screen.blit(text1, (j * dif + 20, i * dif + 20))
 
 
 def generateSolvedBoardGUI(aBoard=None):
+
+    global puzzle
+    puzzle = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]
+
     if aBoard is None:
         aBoard = puzzle
+
     allowedNums = []
     previousChangedValues = []
     oldAllowedNums = []
     i = 0
     j = 0
-    while i <= len(aBoard)-1:
-        while j <= len(aBoard[i])-1:
+    while i <= len(aBoard) - 1:
+        while j <= len(aBoard[i]) - 1:
             for k in range(1, 10):
                 if not keepCheckingValues(k, aBoard, i, j):
                     allowedNums.append(k)
@@ -138,7 +144,7 @@ def generateSolvedBoardGUI(aBoard=None):
             num = allowedNums[random.randint(0, len(allowedNums) - 1)]
             aBoard[i][j] = num
             previousChangedValues.append([i, j, num])
-            oldAllowedNums[len(oldAllowedNums)-1].remove(num)
+            oldAllowedNums[len(oldAllowedNums) - 1].remove(num)
             allowedNums = []
 
             pygame.event.pump()
@@ -150,7 +156,6 @@ def generateSolvedBoardGUI(aBoard=None):
             j += 1
         j = 0
         i += 1
-    # removeNumbersFromSolvedBoardGUI()
     return aBoard
 
 
@@ -230,21 +235,24 @@ def solveBoardGUI(aBoard=None):
 def startTheGame():
     run = True
     drawRedBox = False
+    generatePuzzleColour, solveBoardColour, menuColour = DARK_BLUE
     while run:
         pygame.event.pump()
-        screen.fill(WHITE)
+        screen.fill(ORANGE)
         pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                print(pygame.mouse.get_pos())
+                print(pos)
                 if 520 <= pos[1] <= 530:
                     if 20 <= pos[0] <= 120:
                         generatePuzzle()
                     elif 150 <= pos[0] <= 225:
                         solveBoardGUI()
+                    elif 255 <= pos[0] <= 288:
+                        menu.mainloop(screen)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
                     solveBoardGUI()
@@ -253,11 +261,31 @@ def startTheGame():
         if 520 <= pos[1] <= 530:
             if 20 <= pos[0] <= 120:
                 pygame.mouse.set_cursor(pygame.cursors.tri_left)
+                generatePuzzleColour = LIGHT_GREY
+                solveBoardColour = DARK_BLUE
+                menuColour = DARK_BLUE
             elif 150 <= pos[0] <= 225:
                 pygame.mouse.set_cursor(pygame.cursors.tri_left)
+                solveBoardColour = LIGHT_GREY
+                generatePuzzleColour = DARK_BLUE
+                menuColour = DARK_BLUE
+            elif 255 <= pos[0] <= 288:
+                pygame.mouse.set_cursor(pygame.cursors.tri_left)
+                menuColour = LIGHT_GREY
+                generatePuzzleColour = DARK_BLUE
+                solveBoardColour = DARK_BLUE
         else:
             pygame.mouse.set_cursor(*pygame.cursors.arrow)
+            generatePuzzleColour = DARK_BLUE
+            solveBoardColour = DARK_BLUE
+            menuColour = DARK_BLUE
+
         draw()
+
+        buttonToGenerateBoard(generatePuzzleColour)
+        buttonToSolveBoard(solveBoardColour)
+        buttonToMenu(menuColour)
+
         pygame.display.update()
 
 
