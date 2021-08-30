@@ -1,9 +1,17 @@
-import pygame
-import sys
-import pygame_menu
+import os
 import random
+import sys
 from copy import deepcopy
-from SudokuSolver import solveBoardLoToHi, solveBoardHiToLo, keepCheckingValues, printBoard
+
+import pygame
+import pygame.rect
+import pygame_menu
+from pygame_menu import Theme
+
+from SudokuAbout import render_textrect
+from SudokuSolver import solveBoardLoToHi, solveBoardHiToLo, keepCheckingValues
+
+main_dir = os.path.split(os.path.abspath(__file__))[0]
 
 emptyBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -24,9 +32,11 @@ pygame.init()
 # Load test fonts for future use
 font1 = pygame.font.SysFont("comicsans", 40)
 font2 = pygame.font.SysFont("comicsans", 20)
+font3 = pygame.font.SysFont("arial", 15)
 
 windowSize = width, height = 500, 600
 screen = pygame.display.set_mode(windowSize)
+pygame.display.set_caption('Sudoku Visualizer by Dhairya Khara')
 
 DARK_BLUE = (43, 50, 64)
 ORANGE = (242, 153, 75)
@@ -105,7 +115,6 @@ def drawNumber(i, j, number):
 
 
 def generateSolvedBoardGUI(aBoard=None):
-
     global puzzle
     puzzle = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -245,7 +254,6 @@ def startTheGame():
                 run = False
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                print(pos)
                 if 520 <= pos[1] <= 530:
                     if 20 <= pos[0] <= 120:
                         generatePuzzle()
@@ -289,9 +297,68 @@ def startTheGame():
         pygame.display.update()
 
 
-menu = pygame_menu.Menu('Welcome', width, height)
+def drawAbout():
+    my_rect = pygame.Rect(40, 20, 300, 600)
+    textToDisplay = "This program gives a visualization of the backtracking algorithm and its application to solving " \
+                    "sudoku puzzles. \n\nI have taken it one step further and used the same algorithm to generate " \
+                    "unique sudoku puzzles. \n\nThe backtracking algorithm is quite straightforward to understand. " \
+                    "The algorithm traverses a given matrix ( a 2 dimensional array which is our sudoku puzzle). If " \
+                    "it detects a 0 (used to indicate a blank), it will try and insert a value between 1 and 9 in " \
+                    "ascending order. Once a value is 'accepted' (a value is accepted when the same number is not in " \
+                    "its corresponding row, column or square. Once the value is inserted, it will move on " \
+                    "to the next element. The crux of this algorithm is to deal with the situation when not a single " \
+                    "value (1-9) can be allotted to an index in the matrix. In that case, we go to the previous " \
+                    "changed value and increment it by one. This process ensures that a solvable board will be " \
+                    "solved. \n\nThis algorithm can also be used to generate unique puzzles. In order to generate " \
+                    "puzzles, random values are inserted in an empty matrix until the matrix is full. The algorithm " \
+                    "mentioned above ensures that the solved board follows the rules of sudoku. Once a unique solved " \
+                    "board is prepared, random values are removed and the same algorithm is used to check if removing " \
+                    "the random value still makes the board solvable or not. \n\nBy Dhairya Khara "
+    text = render_textrect(
+        textToDisplay,
+        font3,
+        my_rect,
+        DARK_BLUE,
+        ORANGE
+        )
+    if text:
+        screen.blit(text, my_rect)
 
-menu.add.button('Play', startTheGame)
+
+def about():
+    while True:
+        pygame.event.pump()
+        screen.fill(ORANGE)
+        pos = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if (520 <= pos[1] <= 540) and (400 <= pos[0] <= 470):
+                    menu.mainloop(screen)
+        if (520 <= pos[1] <= 540) and (400 <= pos[0] <= 470):
+            text1 = font1.render("Menu", True, LIGHT_GREY)
+            screen.blit(text1, (400, 520))
+            pygame.mouse.set_cursor(pygame.cursors.tri_left)
+        else:
+            text1 = font1.render("Menu", True, DARK_BLUE)
+            screen.blit(text1, (400, 520))
+            pygame.mouse.set_cursor(*pygame.cursors.arrow)
+        drawAbout()
+        pygame.display.update()
+
+
+menuTheme = Theme(background_color=ORANGE,
+                  title_background_color=DARK_BLUE,
+                  title_font_shadow=True,
+                  widget_padding=25,
+                  )
+
+menu = pygame_menu.Menu('Sudoku Visualizer', width, height, theme=menuTheme)
+
+menu.add.button('Start', startTheGame)
+menu.add.button('About', about)
 menu.add.button('Quit', pygame_menu.events.EXIT)
 
 menu.mainloop(screen)
