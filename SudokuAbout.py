@@ -1,3 +1,5 @@
+import pygame
+
 class TextRectException(Exception):
     def __init__(self, message=None):
         self.message = message
@@ -81,3 +83,36 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
         accumulated_height += font.size(line)[1]
 
     return surface
+
+
+def drawAbout(aScreen):
+    DARK_BLUE = (43, 50, 64)
+    ORANGE = (242, 153, 75)
+
+    font3 = pygame.font.SysFont("arial", 15)
+    my_rect = pygame.Rect(40, 20, 300, 600)
+    textToDisplay = "This program gives a visualization of the backtracking algorithm and its application to solving " \
+                    "sudoku puzzles. \n\nI have taken it one step further and used the same algorithm to generate " \
+                    "unique sudoku puzzles. \n\nThe backtracking algorithm is quite straightforward to understand. " \
+                    "The algorithm traverses a given matrix ( a 2 dimensional array which is our sudoku puzzle). If " \
+                    "it detects a 0 (used to indicate a blank), it will try and insert a value between 1 and 9 in " \
+                    "ascending order. Once a value is 'accepted' (a value is accepted when the same number is not in " \
+                    "its corresponding row, column or square. Once the value is inserted, it will move on " \
+                    "to the next element. The crux of this algorithm is to deal with the situation when not a single " \
+                    "value (1-9) can be allotted to an index in the matrix. In that case, we go to the previous " \
+                    "changed value and increment it by one. This process ensures that a solvable board will be " \
+                    "solved. \n\nThis algorithm can also be used to generate unique puzzles. In order to generate " \
+                    "puzzles, random values are inserted in an empty matrix until the matrix is full. The algorithm " \
+                    "mentioned above ensures that the solved board follows the rules of sudoku. Once a unique solved " \
+                    "board is prepared, random values are removed and the same algorithm is used to check if removing " \
+                    "the random value still makes the board solvable or not. \n\nBy Dhairya Khara "
+    text = render_textrect(
+        textToDisplay,
+        font3,
+        my_rect,
+        DARK_BLUE,
+        ORANGE
+        )
+    if text:
+        aScreen.blit(text, my_rect)
+
