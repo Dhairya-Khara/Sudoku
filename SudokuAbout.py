@@ -97,7 +97,7 @@ def drawAbout(aScreen):
                     "The algorithm traverses a given matrix ( a 2 dimensional array which is our sudoku puzzle). If " \
                     "it detects a 0 (used to indicate a blank), it will try and insert a value between 1 and 9 in " \
                     "ascending order. Once a value is 'accepted' (a value is accepted when the same number is not in " \
-                    "its corresponding row, column or square. Once the value is inserted, it will move on " \
+                    "its corresponding row, column or square). Once the value is inserted, it will move on " \
                     "to the next element. The crux of this algorithm is to deal with the situation when not a single " \
                     "value (1-9) can be allotted to an index in the matrix. In that case, we go to the previous " \
                     "changed value and increment it by one. This process ensures that a solvable board will be " \
