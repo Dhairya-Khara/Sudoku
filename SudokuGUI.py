@@ -27,7 +27,7 @@ emptyBoard = [
 
 puzzle = emptyBoard
 
-pygame.init()
+pygame.init()  # pre-req for using pygame
 
 # Load test fonts for future use
 font1 = pygame.font.SysFont("comicsans", 40)
@@ -49,41 +49,53 @@ y = 0
 
 
 def buttonToGenerateBoard(textColour):
+    """
+    Renders text that acts as a button to generate puzzle
+    :param textColour: colour of the text "Generate Puzzle" to be displayed
+    :return: void
+    """
     pygame.event.pump()
     text1 = font2.render("Generate Puzzle", True, textColour)
     screen.blit(text1, (20, 520))
 
 
 def buttonToSolveBoard(textColour):
+    """
+    Renders text that acts as a button to solve the board
+    :param textColour: colour of the text "Solve Board" to be displayed
+    :return: void
+    """
     text1 = font2.render("Solve Board", True, textColour)
     screen.blit(text1, (150, 520))
 
 
 def buttonToMenu(textColour):
+    """
+    Renders text that acts as a button to go back to the menu
+    :param textColour: colour of the text "Menu" to be displayed
+    :return: void
+    """
     text1 = font2.render("Menu", True, textColour)
     screen.blit(text1, (255, 520))
 
 
-def get_cord(pos):
-    global x
-    x = pos[0] // dif
-    global y
-    y = pos[1] // dif
-
-
-def draw_box():
-    for i in range(2):
-        pygame.draw.line(screen, BOX_COLOUR, (x * dif - 3, (y + i) * dif), (x * dif + dif + 3, (y + i) * dif), 7)
-        pygame.draw.line(screen, BOX_COLOUR, ((x + i) * dif, y * dif), ((x + i) * dif, y * dif + dif), 7)
-
-
 def drawBoxWithGivenArguments(aX, aY):
+    """
+    Draws two perpendicular outlines to mimic a box, used to highlight a specific cell on the drawn matrix
+    :param aX: the x co-ordinate of the cell (row)
+    :param aY: the y co-ordinate of the cell (col)
+    :return: void
+    """
     for i in range(2):
         pygame.draw.line(screen, BOX_COLOUR, (aX * dif - 3, (aY + i) * dif), (aX * dif + dif + 3, (aY + i) * dif), 7)
         pygame.draw.line(screen, BOX_COLOUR, ((aX + i) * dif, aY * dif), ((aX + i) * dif, aY * dif + dif), 7)
 
 
 def drawOutlineLines():
+    """
+    Draws the grid outlines
+    :return: void
+    """
     # Draw lines horizontally and vertically to form grid
     for i in range(10):
         if i % 3 == 0:
@@ -95,27 +107,44 @@ def drawOutlineLines():
 
 
 def draw(aBoard=None):
+    """
+    Main draw method, handles all rendering
+    :param aBoard: the matrix that is required to be drawn
+    :return: void
+    """
     if aBoard is None:
         aBoard = puzzle
-    screen.fill(ORANGE)
+    screen.fill(ORANGE)  # background colour
     for i in range(9):
         for j in range(9):
-            if aBoard[i][j] != 0:
-                text1 = font1.render(str(aBoard[i][j]), 1, DARK_BLUE)
+            if aBoard[i][j] != 0:  # since 0 is considered blank
+                text1 = font1.render(str(aBoard[i][j]), True, DARK_BLUE)
                 screen.blit(text1, (j * dif + 20, i * dif + 20))
 
     # Draw lines horizontally and vertically to form grid
     drawOutlineLines()
 
 
-def drawNumber(i, j, number):
+def drawNumber(row, col, number):
+    """
+    Renders an element at a particular spot
+    :param row: the x co-ordinate of the cell the numbers wants to be rendered at
+    :param col: the y co-ordinate of the cell the numbers wants to be rendered at
+    :param number: the specific number to be drawn
+    :return: void
+    """
     text1 = font1.render(str(number), True, DARK_BLUE)
-    screen.blit(text1, (j * dif + 20, i * dif + 20))
+    screen.blit(text1, (col * dif + 20, row * dif + 20))
 
 
 def generateSolvedBoardGUI(aBoard=None):
+    """
+    Generates and renders a unique and random solved sudoku board
+    :param aBoard: Matrix used to hold the value of the generated board
+    :return: The solved board (2d array)
+    """
     global puzzle
-    puzzle = [
+    puzzle = [  # resetting the global board (puzzle) everytime a new board wants to be generated
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -155,6 +184,7 @@ def generateSolvedBoardGUI(aBoard=None):
             oldAllowedNums[len(oldAllowedNums) - 1].remove(num)
             allowedNums = []
 
+            # pygame commands to visualize the generation
             pygame.event.pump()
             draw(aBoard)
             drawBoxWithGivenArguments(j, i)
@@ -168,9 +198,14 @@ def generateSolvedBoardGUI(aBoard=None):
 
 
 def removeNumbersFromSolvedBoardGUI(aBoard=None):
+    """
+    Removes numbers from the above generated board to create the puzzle
+    :param aBoard: Matrix used to hold the value of the puzzle
+    :return: Generated Puzzle (2d array)
+    """
     if aBoard is None:
         aBoard = puzzle
-    totalNumbersToRemove = 64
+    totalNumbersToRemove = 64  # maximum numbers possible to remove before a sudoku is unsolvable
     for i in range(0, totalNumbersToRemove):
         randomRow = random.randint(0, 8)
         randomCol = random.randint(0, 8)
@@ -180,13 +215,14 @@ def removeNumbersFromSolvedBoardGUI(aBoard=None):
         solution1 = solveBoardLoToHi(tempBoard)
         solution2 = solveBoardHiToLo(tempBoard)
 
+        # pygame commands to visualize the creation of the puzzle
         pygame.event.pump()
         draw()
         drawBoxWithGivenArguments(randomRow, randomCol)
         pygame.display.update()
         pygame.time.delay(50)
 
-        while solution1 != solution2:
+        while solution1 != solution2:  # ensures when one value is removed, only one possilbe solution is possible
             tempBoard[randomRow][randomCol] = oldValue
             randomRow = random.randint(0, 8)
             randomCol = random.randint(0, 8)
@@ -199,12 +235,21 @@ def removeNumbersFromSolvedBoardGUI(aBoard=None):
 
 
 def generatePuzzle():
+    """
+    Brings together the generation of the board and the creation of the puzzle (above two methods)
+    :return: void
+    """
     pygame.event.pump()
     generateSolvedBoardGUI()
     removeNumbersFromSolvedBoardGUI()
 
 
 def solveBoardGUI(aBoard=None):
+    """
+    Solves and visualizes the backtracking algorithm used to solve sudoku puzzles
+    :param aBoard: 2d array to solve
+    :return: void
+    """
     if aBoard is None:
         aBoard = puzzle
     previousChangedValues = []
@@ -241,15 +286,18 @@ def solveBoardGUI(aBoard=None):
 
 
 def startTheGame():
+    """
+    Method with the main game loop
+    :return: void
+    """
     run = True
     generatePuzzleColour, solveBoardColour, menuColour = DARK_BLUE
     while run:
         pygame.event.pump()
         screen.fill(ORANGE)
         pos = pygame.mouse.get_pos()
-        for event in pygame.event.get():
+        for event in pygame.event.get():  # handling user input
             if event.type == pygame.QUIT:
-                run = False
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if 520 <= pos[1] <= 530:
@@ -264,7 +312,7 @@ def startTheGame():
                     solveBoardGUI()
                 if event.key == pygame.K_f:
                     generatePuzzle()
-        if 520 <= pos[1] <= 530:
+        if 520 <= pos[1] <= 530:  # highlighting buttons for visual clarity
             if 20 <= pos[0] <= 120:
                 pygame.mouse.set_cursor(pygame.cursors.tri_left)
                 generatePuzzleColour = LIGHT_GREY
@@ -296,6 +344,10 @@ def startTheGame():
 
 
 def about():
+    """
+    Method with the loop for the about page
+    :return: void
+    """
     while True:
         pygame.event.pump()
         screen.fill(ORANGE)
@@ -319,6 +371,7 @@ def about():
         pygame.display.update()
 
 
+# designing the menu using pygame_menu
 menuTheme = Theme(background_color=ORANGE,
                   title_background_color=DARK_BLUE,
                   title_font_shadow=True,
