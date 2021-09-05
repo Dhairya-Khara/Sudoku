@@ -30,8 +30,9 @@ puzzle = emptyBoard
 pygame.init()  # pre-req for using pygame
 
 # Load test fonts for future use
-font1 = pygame.font.SysFont("comicsans", 40)
-font2 = pygame.font.SysFont("comicsans", 20)
+font1 = pygame.font.Font("Roboto-Medium.ttf", 24)
+font2 = pygame.font.Font("Roboto-Medium.ttf", 12)
+
 
 windowSize = width, height = 500, 600
 screen = pygame.display.set_mode(windowSize)
@@ -76,7 +77,7 @@ def buttonToMenu(textColour):
     :return: void
     """
     text1 = font2.render("Menu", True, textColour)
-    screen.blit(text1, (255, 520))
+    screen.blit(text1, (256, 520))
 
 
 def drawBoxWithGivenArguments(aX, aY):
@@ -119,7 +120,7 @@ def draw(aBoard=None):
         for j in range(9):
             if aBoard[i][j] != 0:  # since 0 is considered blank
                 text1 = font1.render(str(aBoard[i][j]), True, DARK_BLUE)
-                screen.blit(text1, (j * dif + 20, i * dif + 20))
+                screen.blit(text1, (j * dif + 20, i * dif + 15))
 
     # Draw lines horizontally and vertically to form grid
     drawOutlineLines()
@@ -300,12 +301,13 @@ def startTheGame():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                print(pos)
                 if 520 <= pos[1] <= 530:
-                    if 20 <= pos[0] <= 120:
+                    if 20 <= pos[0] <= 107:
                         generatePuzzle()
-                    elif 150 <= pos[0] <= 225:
+                    elif 150 <= pos[0] <= 213:
                         solveBoardGUI()
-                    elif 255 <= pos[0] <= 288:
+                    elif 256 <= pos[0] <= 285:
                         menu.mainloop(screen)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
@@ -313,21 +315,26 @@ def startTheGame():
                 if event.key == pygame.K_f:
                     generatePuzzle()
         if 520 <= pos[1] <= 530:  # highlighting buttons for visual clarity
-            if 20 <= pos[0] <= 120:
+            if 20 <= pos[0] <= 107:
                 pygame.mouse.set_cursor(pygame.cursors.tri_left)
                 generatePuzzleColour = LIGHT_GREY
                 solveBoardColour = DARK_BLUE
                 menuColour = DARK_BLUE
-            elif 150 <= pos[0] <= 225:
+            elif 150 <= pos[0] <= 213:
                 pygame.mouse.set_cursor(pygame.cursors.tri_left)
                 solveBoardColour = LIGHT_GREY
                 generatePuzzleColour = DARK_BLUE
                 menuColour = DARK_BLUE
-            elif 255 <= pos[0] <= 288:
+            elif 256 <= pos[0] <= 285:
                 pygame.mouse.set_cursor(pygame.cursors.tri_left)
                 menuColour = LIGHT_GREY
                 generatePuzzleColour = DARK_BLUE
                 solveBoardColour = DARK_BLUE
+            else:
+                pygame.mouse.set_cursor(*pygame.cursors.arrow)
+                generatePuzzleColour = DARK_BLUE
+                solveBoardColour = DARK_BLUE
+                menuColour = DARK_BLUE
         else:
             pygame.mouse.set_cursor(*pygame.cursors.arrow)
             generatePuzzleColour = DARK_BLUE
