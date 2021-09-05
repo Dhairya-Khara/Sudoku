@@ -301,7 +301,6 @@ def startTheGame():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                print(pos)
                 if 520 <= pos[1] <= 530:
                     if 20 <= pos[0] <= 107:
                         generatePuzzle()
