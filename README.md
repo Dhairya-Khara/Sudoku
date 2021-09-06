@@ -6,7 +6,7 @@ using Python and visuzlied using [Pygame](https://www.pygame.org/news). Another 
 
 ## Getting Started
 The easiest way to interact with the program is to run the included executable file (SudokuGUI.exe).  Do not move the location of the file. Instead run it from the root 
-directory since it requires some dependencies included in the root folder. 
+directory since it requires several included dependencies.
 
 ## Installation Guide
 After cloning the repository, install all the required dependencies using pip.
