@@ -1,12 +1,20 @@
 # Sudoku Visualizer
-The motivation of this project came from [Tech With Tim](https://www.youtube.com/c/TechWithTim)'s sudoku visualizer. The primary purpose of this code was to deepen my 
-understanding of the Python programming language and the backtracking algorithm. 
-Even though [Tech With Tim](https://www.youtube.com/c/TechWithTim) uses a recursive approach to build his backtracking algorithm, an interative procedure is used in this project.
-Not only is this algorithm being used to solve sudoku boards, but I use it generate unique sudoku puzzles. Both the algorithms (generator and solver) have been implemented
-using raw Python and visuzlied using Pygame. Other thid party modules is pygame_menu, to organize the user interface.
+The primary purpose of this project was to deepen my understanding of the [Python](https://www.python.org/) programming language and the [backtracking algorithm](https://en.wikipedia.org/wiki/Backtracking). 
+The motivation of this project came from [Tech With Tim](https://www.youtube.com/c/TechWithTim)'s sudoku visualizer. Since he uses a recursive approach (the traditional way) to build his backtracking algorithm, I wanted to try something different and hence chose to use an iterative procedure.
+Not only have I used this algorithm being to solve sudoku boards, but also to generate unique sudoku puzzles. Both algorithms (generator and solver) have been implemented
+using Python and visuzlied using [Pygame](https://www.pygame.org/news).  [Pygame-menu](https://pygame-menu.readthedocs.io/en/4.1.3/), a third party module, was also used to organize the user interface.
+
+## Getting Started
+The easiest way to interact with the program is to run the included executable file (SudokuGUI.exe).  Do not move the location of the file. Instead run it from the root 
+directory since it requires some dependencies included in the root folder. 
 
 ## Installation Guide
-After cloning the repository, you first want to install all the required dependencies using pip.
+After cloning the repository, install all the required dependencies using pip.
 ```bash
 pip install -r requirements.txt
 ```
+The two python modules that are going to be installed will be pygame and pygame-menu.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
+
